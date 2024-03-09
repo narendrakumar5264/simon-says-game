@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+
+body{
+text-align: center;
+
+}
+.btn{
+    height: 200px;
+    width: 200px;
+    border-radius: 20%;
+    border: 10px solid black;
+    margin: 2.5rem;
+}
+.btns{
+
+    display: flex; 
+    justify-content: center;
+}
+.red{
+    background-color: rgb(226, 128, 128);
+}
+.yellow{
+    background-color: rgb(166, 195, 110);
+}
+.green{
+    background-color: rgb(125, 230, 125);
+}
+.purple{
+    background-color: rgb(244, 157, 244);
+}
+.flash{
+    background-color:white;
+}
+.userflash{
+    background-color: green;
+}
+</style>
+<body>
+    <h1 style="color: blue;">simon Says Game</h1>
+    <h2>Press Any Key To start the Game   </h2>
+    <div class="btns">
+        <div class="line1">
+<div class="btn red" type="button" id ="red">1</div>
+<div class="btn yellow" type="button" id ="yellow">2</div>
+</div>
+<div class="line2">
+<div class="btn green" type="button"id ="green" >3</div>
+<div class="btn purple" type="button" id ="purple">4</div>
+</div></div>
+<div> <h2>Players must  repeat the sequence of colors by clicking on the buttons in the same order they were shown. Players can use a mouse  click on the colored buttons.</h2>
+<h2> Players aim to achieve the highest score possible by correctly repeating the longest sequence of colors.</h2></div>
+<script>
+
+let gameseq =[];
+let userseq =[];
+let started = false;
+let btns = ["yellow", "red","green","purple"];
+ let level = 0;
+
+ let h2 = document.querySelector("h2");
+ document.addEventListener(
+    "keypress",function (){
+        if(started == false){
+            console.log("started");
+            started = true;
+            levelup();
+        }
+    });
+    function btnFlash(btn)  {
+btn.classList.add("flash");
+setTimeout( function(){
+btn.classList.remove("flash");
+
+},300);
+
+} 
+function userflash(btn)  {
+    btn.classList.add("userflash");
+    setTimeout( function(){
+    btn.classList.remove("userflash");
+    
+    },300);
+    
+    }
+    function levelup(){
+userseq = [];
+        level++;
+        h2.innerText= `level ${level}`;
+        let rendId = Math.floor(Math.random() *3);
+        let randcolor = btns[rendId];
+        let randbtn = document.querySelector(`.${randcolor}`);
+        gameseq.push(randcolor);
+        btnFlash(randbtn);    }
+
+
+        function check(idx) {
+       
+          if(userseq[idx] === gameseq[idx]){
+            if(userseq.length == gameseq.length){
+      setTimeout(levelup, 1000);
+            }
+        } else{
+            reset();
+            h2.innerHTML = `Game Over ! your score was <b>${level} </b>  <br> Press any key to start`;
+       document.querySelector("body").style.backgroundColor = "red";
+       setTimeout(function() {
+        document.querySelector("body").style.backgroundColor = "white";
+       },150);
+        }
+    }
+        function btnPress()  {
+            let btn = this;
+            userflash(btn);  
+            userColor = btn.getAttribute("id");
+            userseq.push(userColor);
+            check(userseq.length - 1);
+        }
+        let allbtn = document.querySelectorAll(".btn");
+        for(btn of allbtn){
+            btn.addEventListener("click" ,btnPress);
+        }
+function reset(){
+    started  = false;
+ gameseq =[];
+ userseq =[];
+ level = 0;
+}
+</script>
+    </div>
+</body>
+</html>
